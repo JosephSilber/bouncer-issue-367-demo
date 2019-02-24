@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Bouncer;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Bouncer::cache();
     }
 
     /**
@@ -23,6 +24,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        Bouncer::useUserModel(\App\User::class);
+        Bouncer::runAfterPolicies();
+
+        Bouncer::scope()
+            ->onlyRelations()
+            ->dontScopeRoleAbilities()
+            // For the demo, let's hard-code it as 1. Shouldn't matter.
+            ->to(1);
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Tests\Unit;
 
+use Bouncer;
+use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -14,6 +16,14 @@ class ExampleTest extends TestCase
      */
     public function testBasicTest()
     {
-        $this->assertTrue(true);
+        $user = factory(User::class)->create();
+
+        $this->assertFalse($user->isA('tenant_admin'));
+
+        $user->assign('tenant_admin');
+
+        Bouncer::refreshFor($user);
+
+        $this->assertTrue($user->isA('tenant_admin'));
     }
 }
